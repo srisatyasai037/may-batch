@@ -135,5 +135,6 @@ output application/json
             </ee:message>
         </ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="c6567e12-5e4c-4691-bff2-7bb5425d674e" message="floe begin:::::::::::::::::::::"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d62b9878-2d3b-454b-882d-b70f304b8e27" message="this is my info logs:::::::::::::::::::::"/>
     </flow>
 </mule>
