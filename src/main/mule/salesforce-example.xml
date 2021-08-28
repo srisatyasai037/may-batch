@@ -39,7 +39,7 @@ payload]]></ee:set-payload>
 	</flow>
 	<flow name="salesforce-exampleFlow1" doc:id="ddc648e8-f27a-4aaa-af80-f7dcb1aaebd5" >
 		<http:listener doc:name="Insert/Update" doc:id="6a03b6ad-4b42-4600-b3b8-9a588e563fc6" config-ref="HTTP_Listener_config" path="/insert"/>
-		<logger level="INFO" doc:name="Logger" doc:id="eb6c4049-171f-469c-84ba-5bedcad57d4e" message="inserting records into salesforce account table :::::::::::::::::::::::"/>
+		<logger level="INFO" doc:name="Logger" doc:id="eb6c4049-171f-469c-84ba-5bedcad57d4e" message="inserting records into salesforce account table :::::::::::::::::::::::vm,bvc,mbn,mcv"/>
 		<ee:transform doc:name="Transform Message" doc:id="a91ead03-42a6-44f5-a4e6-051f9b04557f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -66,7 +66,7 @@ payload]]></ee:set-payload>
 	</flow>
 	<flow name="salesforce-exampleFlow2" doc:id="49a02586-2a1e-4b6a-ad96-b8af2a720094" >
 		<http:listener doc:name="Delete" doc:id="6f4b6fc4-e20f-4ae7-8d9f-2cf824055d82" config-ref="HTTP_Listener_config" path="/delete"/>
-		<logger level="INFO" doc:name="Logger" doc:id="72031fb7-6058-44c8-8cf8-22c0cf1eb37f" message="Delecting the records from salesforce::::::::::::::::::::::::::::"/>
+		<logger level="INFO" doc:name="Logger" doc:id="72031fb7-6058-44c8-8cf8-22c0cf1eb37f" message="Delecting the records from salesforce::::::::::::::::::::::::::::::::"/>
 		<ee:transform doc:name="Transform Message" doc:id="874cf1f4-1e00-4f44-a4f9-94330bda7ddc" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
