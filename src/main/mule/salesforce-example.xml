@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="93e016bd-2291-4b82-b716-186d67a8efc8" >
+		<salesforce:basic-connection username="manideepbonam@gmail.com" password="Mule@123" securityToken="cQv9mdh6xvTqMqwISvkoAJmp"/>
+	</salesforce:sfdc-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4010d69e-f964-4e2f-8745-716205df21dd" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config_Shailaja" doc:name="Salesforce Config" doc:id="19af81a3-5931-46cd-8ff5-935598691da5" >
+		<salesforce:basic-connection username="shailajapalakuri123@gmail.com" password="shailaja1" securityToken="laM3pTTzSDVJK3a4CkQuThED"/>
+	</salesforce:sfdc-config>
+	<flow name="salesforce-exampleFlow" doc:id="3ceb44a7-0694-45f4-ade1-d9b777d92a6f" >
+		<http:listener doc:name="Select" doc:id="06d408fb-c323-4b2c-af0a-74782183e7ff" config-ref="HTTP_Listener_config" path="/salesforce" />
+		<logger level="INFO" doc:name="Logger" doc:id="65ca8c8c-fd77-4801-a338-2f924bb406a3" message="Flow Begin :::::::::::::::::::::::::::;"/>
+		<salesforce:query doc:name="Query" doc:id="0715c005-8db3-4911-95c2-f42cba925aa0" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[select Name,Fax ,AccountNumber from Account where AccountNumber=:accountNumber]]></salesforce:salesforce-query>
+			<salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	"accountNumber" : attributes.queryParams.AccountNumber
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="ce83687a-36ad-4e0c-be1a-a728d5e08271" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="salesforce-exampleFlow1" doc:id="ddc648e8-f27a-4aaa-af80-f7dcb1aaebd5" >
+		<http:listener doc:name="Insert/Update" doc:id="6a03b6ad-4b42-4600-b3b8-9a588e563fc6" config-ref="HTTP_Listener_config" path="/insert"/>
+		<logger level="INFO" doc:name="Logger" doc:id="eb6c4049-171f-469c-84ba-5bedcad57d4e" message="inserting records into salesforce account table :::::::::::::::::::::::"/>
+		<ee:transform doc:name="Transform Message" doc:id="a91ead03-42a6-44f5-a4e6-051f9b04557f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map {
+	
+	Name:$.name,
+	employeeid__c:$.id
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert doc:name="Upsert" doc:id="63ef5243-c032-4e40-a39e-a4313617e122" config-ref="Salesforce_Config" objectType="employee_id__c" externalIdFieldName="employeeid__c"/>
+		<ee:transform doc:name="Transform Message" doc:id="093e355e-0c37-40be-b90c-2918f3b97123" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b142e5d5-02d2-4b59-8b9e-ec9f43d521a5" message="ended::::::::::::"/>
+	</flow>
+	<flow name="salesforce-exampleFlow2" doc:id="49a02586-2a1e-4b6a-ad96-b8af2a720094" >
+		<http:listener doc:name="Delete" doc:id="6f4b6fc4-e20f-4ae7-8d9f-2cf824055d82" config-ref="HTTP_Listener_config" path="/delete"/>
+		<logger level="INFO" doc:name="Logger" doc:id="72031fb7-6058-44c8-8cf8-22c0cf1eb37f" message="Delecting the records from salesforce::::::::::::::::::::::::::::"/>
+		<ee:transform doc:name="Transform Message" doc:id="874cf1f4-1e00-4f44-a4f9-94330bda7ddc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map {
+	
+	
+	employeeid__c:$.id
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:delete doc:name="Delete" doc:id="5c18a6b0-b663-40f3-b249-e222e8b990a7" config-ref="Salesforce_Config">
+			<salesforce:ids ><![CDATA[#[payload.employeeid__c]]]></salesforce:ids>
+		</salesforce:delete>
+		<ee:transform doc:name="Transform Message" doc:id="aadf3a18-f82a-43aa-9796-cb288d6ea8fc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
