@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 	</salesforce:sfdc-config>
 	<flow name="salesforce-exampleFlow" doc:id="3ceb44a7-0694-45f4-ade1-d9b777d92a6f" >
 		<http:listener doc:name="Select" doc:id="06d408fb-c323-4b2c-af0a-74782183e7ff" config-ref="HTTP_Listener_config" path="/salesforce" />
-		<logger level="INFO" doc:name="Logger" doc:id="65ca8c8c-fd77-4801-a338-2f924bb406a3" message="Flow Begin :::::::::::::::::::::::::::;"/>
+		<logger level="INFO" doc:name="Logger" doc:id="65ca8c8c-fd77-4801-a338-2f924bb406a3" message="Flow Begin :::::::::::::::::::::::::::;b.kvcbfkckbcv"/>
 		<salesforce:query doc:name="Query" doc:id="0715c005-8db3-4911-95c2-f42cba925aa0" config-ref="Salesforce_Config">
 			<salesforce:salesforce-query><![CDATA[select Name,Fax ,AccountNumber from Account where AccountNumber=:accountNumber]]></salesforce:salesforce-query>
 			<salesforce:parameters><![CDATA[#[output application/java
